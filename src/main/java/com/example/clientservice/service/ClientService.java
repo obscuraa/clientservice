@@ -1,59 +1,18 @@
 package com.example.clientservice.service;
 
-import com.example.clientservice.model.Client;
-import com.example.clientservice.repository.ClientRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-
+import com.example.clientservice.model.dto.ClientAddDto;
+import com.example.clientservice.model.dto.ClientFullDto;
+import com.example.clientservice.model.dto.ClientUpdateDto;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.UUID;
 
-@RequiredArgsConstructor
-@Service
-public class ClientService {
+public interface ClientService {
 
-    private final ClientRepository clientRepository;
+    List<ClientFullDto> getClients();
 
-    @GetMapping
-    public List<Client> getClients() {
-        return clientRepository.findAll();
-    }
+    ClientFullDto addNewClient(ClientAddDto clientAddDto);
 
-    public Client addNewClient(Client client) {
-        Optional<Client> clientByOptional = clientRepository.findClientByEmail(client.getEmail());
-        if (clientByOptional.isPresent()){
-            throw new IllegalStateException("email is already taken");
-        }
-        //System.out.println(client);
-        return clientRepository.save(client);
-    }
+    Boolean deleteClient(UUID clientId);
 
-    public void deleteClient(Long clientId) {
-        boolean exists = clientRepository.existsById(clientId);
-        if (!exists) {
-            throw new IllegalStateException("client id " + clientId + "does not exist");
-        }
-        clientRepository.deleteById(clientId);
-    }
-
-    @Transactional
-    public Client updateClient(Long clientId, String name, String email) {
-        Client client = clientRepository.findById(clientId).orElseThrow(
-                () -> new IllegalStateException("client with id " + clientId + "does not exist"));
-
-        if (name != null && name.length() > 0 && !Objects.equals(client.getName(), name)) {
-            client.setName(name);
-        }
-
-        if (email != null && email.length() > 0 && !Objects.equals(client.getEmail(), email)) {
-            Optional<Client> clientOptional = clientRepository.findClientByEmail(email);
-            if (clientOptional.isPresent()){
-                throw new IllegalStateException("email is already taken");
-            }
-            client.setEmail(email);
-        }
-    }
+    ClientFullDto updateClient(UUID clientId, ClientUpdateDto clientUpdateDto);
 }

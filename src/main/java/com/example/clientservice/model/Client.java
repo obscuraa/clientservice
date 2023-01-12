@@ -1,35 +1,32 @@
 package com.example.clientservice.model;
 
-import jakarta.persistence.*;
+import java.util.UUID;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table
+@Table(name = "clients")
 public class Client {
-    @Id
-    @SequenceGenerator(name = "client_sequence",
-            sequenceName = "client_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,
-            generator = "client_sequence"
-    )
-    private long id;
-    private String name;
-    private String email;
-    private Integer age;
 
-    public Client(String name, String email, Integer age) {
-        this.name = name;
-        this.email = email;
-        this.age = age;
-    }
+    @Id
+    @GeneratedValue
+    private UUID id;
+
+    @Column(name = "full_name")
+    private String fullName;
+
+    private String email;
+
+    private Integer age;
 }
