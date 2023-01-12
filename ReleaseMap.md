@@ -1,0 +1,8 @@
+- Добавить паджинацию для ручки получения всех клиентов. Нужно передавать следующие доп. параметры: номер страницы, размер страницы.
+  - https://www.baeldung.com/spring-data-jpa-pagination-sorting
+- В текущем проекте:
+  - новая ручка получение клиента по id
+  - имеет внутри базовый объект - Shoes с полями id (UUID), name (String), type (enum ShoesType), clientId (UUID)
+  - ShoesType: DERBI, OXFORD, MOUNTAIN BOOTS
+  - все методы crud, что и в первом, дополнительно выдавать обувь по clientId
+  - связь между клиентом и обувью 1:* (у клиента поле не в бд, а у сущности List<Shoes>. У сущности обуви поле Client client, которое в базе маппится на client_id)
