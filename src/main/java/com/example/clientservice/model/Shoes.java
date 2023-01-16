@@ -32,5 +32,6 @@ public class Shoes {
     private ShoesType shoesType;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="client_id", nullable=false)
     Client client;
 }

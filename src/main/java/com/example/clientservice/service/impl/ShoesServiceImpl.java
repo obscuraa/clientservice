@@ -1,6 +1,7 @@
 package com.example.clientservice.service.impl;
 
 import com.example.clientservice.mapper.ShoesMapper;
+import com.example.clientservice.model.Client;
 import com.example.clientservice.model.Shoes;
 import com.example.clientservice.model.dto.ClientFullDto;
 import com.example.clientservice.model.dto.ShoesAddDto;
@@ -42,10 +43,12 @@ public class ShoesServiceImpl implements ShoesService {
 
     public ShoesFullDto addNewShoes(ShoesAddDto shoesAddDto) {
         Shoes shoes = shoesMapper.addDtoToEntity(shoesAddDto);
-        clientService.findById(shoesAddDto.getClientId());
+        var client = clientService.findById(shoesAddDto.getClientId());
+        shoes.setClient(client);
         var result = shoesRepository.save(shoes);
         return shoesMapper.toFullDto(result);
     }
+
     @Override
     public Boolean deleteShoes(UUID shoesId) {
         if (!shoesRepository.existsById(shoesId)) {

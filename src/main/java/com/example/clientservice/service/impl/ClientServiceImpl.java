@@ -1,18 +1,18 @@
 package com.example.clientservice.service.impl;
 
+import com.example.clientservice.exception.ClientNotFoundException;
 import com.example.clientservice.mapper.ClientMapper;
+import com.example.clientservice.model.Client;
 import com.example.clientservice.model.dto.ClientAddDto;
-import com.example.clientservice.model.dto.ClientFullDto;
 import com.example.clientservice.model.dto.ClientUpdateDto;
 import com.example.clientservice.repository.ClientRepository;
 import com.example.clientservice.service.ClientService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -22,31 +22,26 @@ public class ClientServiceImpl implements ClientService {
     private final ClientMapper clientMapper;
 
     @Override
-    public List<ClientFullDto> getClients() {
-        return clientRepository.findAll()
+    public List<Client> getClients() {
+        return clientRepository.findAll();
+    }
+
+    @Override
+    public List<Client> getClientsPageable(Pageable pageable) {
+        return clientRepository.findAll(pageable)
                 .stream()
-                .map(clientMapper::toFullDto)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ClientFullDto> getClientsPageable(Pageable pag) {
-
-        return clientRepository.findAll(pag)
-                .stream()
-                .map(clientMapper::toFullDto)
-                .collect(Collectors.toList());
+    public Client findById(UUID clientId) {
+        return clientRepository.findById(clientId)
+            .orElseThrow(() -> new ClientNotFoundException(String.format("Client with id %s no found", clientId)));
     }
 
     @Override
-    public ClientFullDto findById(UUID clientID) {
-        return clientRepository.findById(clientID).map(clientMapper::toFullDto).orElseThrow(null);
-    }
-
-    @Override
-    public ClientFullDto addNewClient(ClientAddDto clientAddDto) {
-        var result = clientRepository.save(clientMapper.addDtoToEntity(clientAddDto));
-        return clientMapper.toFullDto(result);
+    public Client addNewClient(ClientAddDto clientAddDto) {
+        return clientRepository.save(clientMapper.addDtoToEntity(clientAddDto));
     }
 
     @Override
@@ -59,7 +54,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public ClientFullDto updateClient(UUID clientId, ClientUpdateDto clientUpdateDto) {
+    public Client updateClient(UUID clientId, ClientUpdateDto clientUpdateDto) {
         var optionalClient = clientRepository.findById(clientId);
         if (optionalClient.isEmpty()) {
             return null;
@@ -68,8 +63,7 @@ public class ClientServiceImpl implements ClientService {
         client.setAge(clientUpdateDto.getAge() == null ? client.getAge() : clientUpdateDto.getAge());
         client.setFullName(clientUpdateDto.getFullName() == null ? client.getFullName() : clientUpdateDto.getFullName());
         client.setEmail(clientUpdateDto.getEmail() == null ? client.getEmail() : clientUpdateDto.getEmail());
-        var result = clientRepository.save(client);
-        return clientMapper.toFullDto(result);
+        return clientRepository.save(client);
     }
 }
 
