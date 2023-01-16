@@ -1,6 +1,5 @@
 package com.example.clientservice.model.dto;
 
-import com.example.clientservice.model.Client;
 import com.example.clientservice.model.ShoesType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

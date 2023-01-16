@@ -2,16 +2,17 @@ package com.example.clientservice.service.impl;
 
 import com.example.clientservice.mapper.ShoesMapper;
 import com.example.clientservice.model.Shoes;
-import com.example.clientservice.model.dto.*;
+import com.example.clientservice.model.dto.ClientFullDto;
+import com.example.clientservice.model.dto.ShoesAddDto;
+import com.example.clientservice.model.dto.ShoesFullDto;
+import com.example.clientservice.model.dto.ShoesUpdateDto;
 import com.example.clientservice.repository.ShoesRepository;
 import com.example.clientservice.service.ClientService;
 import com.example.clientservice.service.ShoesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -39,23 +40,12 @@ public class ShoesServiceImpl implements ShoesService {
         return shoesRepository.findByClientId(clientId).map(shoesMapper::toFullDto).orElseThrow(null);
     }
 
-    @Override
     public ShoesFullDto addNewShoes(ShoesAddDto shoesAddDto) {
         Shoes shoes = shoesMapper.addDtoToEntity(shoesAddDto);
-        shoes.setClient(
-                clientService.findById(shoesAddDto.getClientId())
-                        .orElseThrow(
-                                () -> new IllegalStateException(
-                                        "Client with id "
-                                                + shoesAddDto.getClientId()
-                                                + " not found"
-                                )
-                        )
-        );
+        clientService.findById(shoesAddDto.getClientId());
         var result = shoesRepository.save(shoes);
         return shoesMapper.toFullDto(result);
     }
-
     @Override
     public Boolean deleteShoes(UUID shoesId) {
         if (!shoesRepository.existsById(shoesId)) {

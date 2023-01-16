@@ -16,7 +16,7 @@ public interface ClientService {
 
     List<ClientFullDto> getClientsPageable(Pageable pageable);
 
-    Optional<Client> findById(UUID clientID);
+    ClientFullDto findById(UUID clientID);
 
     ClientFullDto addNewClient(ClientAddDto clientAddDto);
 

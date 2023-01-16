@@ -18,5 +18,5 @@ public class ClientFullDto {
     private String fullName;
     private String email;
     private Integer age;
-    private List<Shoes> shoesList;
+    private List<ShoesFullDto> shoes;
 }

@@ -1,27 +1,16 @@
 package com.example.clientservice.controller;
 
-import com.example.clientservice.model.Client;
 import com.example.clientservice.model.dto.ClientAddDto;
 import com.example.clientservice.model.dto.ClientFullDto;
 import com.example.clientservice.model.dto.ClientUpdateDto;
 import com.example.clientservice.model.dto.FilterDto;
 import com.example.clientservice.service.ClientService;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(path = "/clients")
@@ -41,7 +30,7 @@ public class ClientController {
     }
 
     @GetMapping(path = "{clientId}")
-    public Optional<Client> findById(@PathVariable("clientId") UUID clientID) {
+    public ClientFullDto findById(@PathVariable("clientId") UUID clientID) {
         return clientService.findById(clientID);
     }
 

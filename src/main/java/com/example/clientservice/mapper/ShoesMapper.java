@@ -3,23 +3,18 @@ package com.example.clientservice.mapper;
 import com.example.clientservice.model.Shoes;
 import com.example.clientservice.model.dto.ShoesAddDto;
 import com.example.clientservice.model.dto.ShoesFullDto;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@Component
-public class ShoesMapper {
-    public Shoes addDtoToEntity(ShoesAddDto shoesAddDto) {
-        return Shoes.builder()
-                .name(shoesAddDto.getName())
-                .shoesType(shoesAddDto.getShoesType())
-                .build();
-    }
+import java.util.List;
 
-    public ShoesFullDto toFullDto(Shoes shoes) {
-        return ShoesFullDto.builder()
-                .id(shoes.getId())
-                .name(shoes.getName())
-                .shoesType(shoes.getShoesType())
-                .clientId(shoes.getClient().getId())
-                .build();
-    }
+@Mapper(componentModel = "spring")
+public interface ShoesMapper {
+    Shoes addDtoToEntity(ShoesAddDto shoesAddDto);
+
+    @Mapping(target = "clientId", source = "shoes.client.id")
+    ShoesFullDto toFullDto(Shoes shoes);
+
+    @Mapping(target = "clientId", source = "shoes.client.id")
+    List<ShoesFullDto> listShoesFullDto(List<Shoes> shoes);
 }
