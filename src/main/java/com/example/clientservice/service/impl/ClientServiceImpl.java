@@ -6,11 +6,13 @@ import com.example.clientservice.model.dto.ClientFullDto;
 import com.example.clientservice.model.dto.ClientUpdateDto;
 import com.example.clientservice.repository.ClientRepository;
 import com.example.clientservice.service.ClientService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -22,9 +24,23 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public List<ClientFullDto> getClients() {
         return clientRepository.findAll()
-            .stream()
-            .map(clientMapper::toFullDto)
-            .collect(Collectors.toList());
+                .stream()
+                .map(clientMapper::toFullDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ClientFullDto> getClientsPageable(Pageable pag) {
+
+        return clientRepository.findAll(pag)
+                .stream()
+                .map(clientMapper::toFullDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public ClientFullDto findById(UUID clientID) {
+        return clientRepository.findById(clientID).map(clientMapper::toFullDto).orElseThrow(null);
     }
 
     @Override
